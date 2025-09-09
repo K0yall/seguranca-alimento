@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Nutrição App')</title>
+    <title>@yield('title', 'NutriApp - Plataforma de Nutrição')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -29,8 +29,11 @@
                     <a href="{{ route('alimentos.index') }}" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('alimentos.*') ? 'text-green-600 bg-green-50' : '' }}">
                         Alimentos
                     </a>
-                    <a href="{{ route('porcoes.create') }}" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('porcoes.*') ? 'text-green-600 bg-green-50' : '' }}">
+                    <a href="{{ route('porcoes.create') }}" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('porcoes.create') ? 'text-green-600 bg-green-50' : '' }}">
                         Calcular Porção
+                    </a>
+                    <a href="{{ route('porcoes.index') }}" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('porcoes.index') ? 'text-green-600 bg-green-50' : '' }}">
+                        Histórico
                     </a>
                 </div>
             </div>
@@ -39,9 +42,15 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        @if(session('ok'))
+        @if(session('success'))
             <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
-                {{ session('ok') }}
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                {{ session('error') }}
             </div>
         @endif
 

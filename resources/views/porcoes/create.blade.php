@@ -9,7 +9,7 @@
         <p class="text-gray-600 mt-2">Selecione um alimento e informe o peso para calcular os valores nutricionais</p>
     </div>
 
-    @if(empty($alimentos))
+    @if($alimentos->isEmpty())
         <div class="bg-white rounded-xl shadow-lg p-12 text-center">
             <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,13 +27,13 @@
             @csrf
             
             <div class="mb-6">
-                <label for="id_alimento" class="block text-sm font-medium text-gray-700 mb-2">Selecione o Alimento *</label>
-                <select id="id_alimento" name="id_alimento" required
+                <label for="alimento_id" class="block text-sm font-medium text-gray-700 mb-2">Selecione o Alimento *</label>
+                <select id="alimento_id" name="alimento_id" required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Escolha um alimento...</option>
                     @foreach($alimentos as $alimento)
-                        <option value="{{ $alimento['id'] }}" {{ old('id_alimento') == $alimento['id'] ? 'selected' : '' }}>
-                            {{ $alimento['nome'] }}
+                        <option value="{{ $alimento->id }}" {{ old('alimento_id', request('alimento')) == $alimento->id ? 'selected' : '' }}>
+                            {{ $alimento->nome }}
                         </option>
                     @endforeach
                 </select>

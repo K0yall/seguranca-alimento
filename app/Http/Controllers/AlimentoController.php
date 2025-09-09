@@ -2,32 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alimento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AlimentoController extends Controller
 {
-    private function getFile()
-    {
-        return 'alimentos.json';
-    }
-
-    private function readAll()
-    {
-        if (!Storage::exists($this->getFile())) {
-            Storage::put($this->getFile(), json_encode([]));
-        }
-        return json_decode(Storage::get($this->getFile()), true);
-    }
-
-    private function saveAll($data)
-    {
-        Storage::put($this->getFile(), json_encode($data, JSON_PRETTY_PRINT));
-    }
-
     public function index()
     {
-        $alimentos = $this->readAll();
+        $alimentos = Alimento::orderBy('nome')->get();
         return view('alimentos.index', compact('alimentos'));
     }
 
@@ -38,14 +20,69 @@ class AlimentoController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
-        $alimentos = $this->readAll();
+        $request->validate([
+            'nome' => 'required|string|max:100|unique:alimentos',
+            'calorias' => 'nullable|numeric|min:0',
+            'carboidratos' => 'nullable|numeric|min:0',
+            'proteinas' => 'nullable|numeric|min:0',
+            'gorduras_totais' => 'nullable|numeric|min:0',
+            'gorduras_saturadas' => 'nullable|numeric|min:0',
+            'gorduras_trans' => 'nullable|numeric|min:0',
+            'fibra' => 'nullable|numeric|min:0',
+            'acucares' => 'nullable|numeric|min:0',
+            'sodio' => 'nullable|numeric|min:0',
+            'calcio' => 'nullable|numeric|min:0',
+            'ferro' => 'nullable|numeric|min:0',
+            'potassio' => 'nullable|numeric|min:0',
+            'vitamina_c' => 'nullable|numeric|min:0',
+        ]);
 
-        $data['id'] = count($alimentos) + 1;
-        $alimentos[] = $data;
+        Alimento::create($request->all());
 
-        $this->saveAll($alimentos);
+        return redirect()->route('alimentos.index')
+            ->with('success', 'Alimento cadastrado com sucesso!');
+    }
 
-        return redirect()->route('alimentos.index')->with('ok', 'Alimento salvo!');
+    public function show(Alimento $alimento)
+    {
+        return view('alimentos.show', compact('alimento'));
+    }
+
+    public function edit(Alimento $alimento)
+    {
+        return view('alimentos.edit', compact('alimento'));
+    }
+
+    public function update(Request $request, Alimento $alimento)
+    {
+        $request->validate([
+            'nome' => 'required|string|max:100|unique:alimentos,nome,' . $alimento->id,
+            'calorias' => 'nullable|numeric|min:0',
+            'carboidratos' => 'nullable|numeric|min:0',
+            'proteinas' => 'nullable|numeric|min:0',
+            'gorduras_totais' => 'nullable|numeric|min:0',
+            'gorduras_saturadas' => 'nullable|numeric|min:0',
+            'gorduras_trans' => 'nullable|numeric|min:0',
+            'fibra' => 'nullable|numeric|min:0',
+            'acucares' => 'nullable|numeric|min:0',
+            'sodio' => 'nullable|numeric|min:0',
+            'calcio' => 'nullable|numeric|min:0',
+            'ferro' => 'nullable|numeric|min:0',
+            'potassio' => 'nullable|numeric|min:0',
+            'vitamina_c' => 'nullable|numeric|min:0',
+        ]);
+
+        $alimento->update($request->all());
+
+        return redirect()->route('alimentos.index')
+            ->with('success', 'Alimento atualizado com sucesso!');
+    }
+
+    public function destroy(Alimento $alimento)
+    {
+        $alimento->delete();
+
+        return redirect()->route('alimentos.index')
+            ->with('success', 'Alimento excluído com sucesso!');
     }
 }
